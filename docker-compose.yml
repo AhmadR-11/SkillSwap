@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # --- 1. Database Service ---
+  mongodb:
+    image: mongo:latest
+    container_name: skillswap-mongo
+    ports:
+      - "27018:27017" # Requirement: Map container ports to host ports
+    networks:
+      - mern_net # Requirement: Configure container networking
+  # --- 2. Backend Service ---
+  server:
+    build: ./server
+    container_name: skillswap-server
+    ports:
+      - "5000:5000" # Requirement: Map container ports to host ports
+    environment:
+      # Requirement: Use environment variables where necessary
+      - MONGO_URI=mongodb://mongodb:27017/skillswap 
+    env_file:
+      - ./server/.env
+    depends_on:
+      - mongodb
+    networks:
+      - mern_net # Requirement: Configure container networking
+
+  # --- 3. Frontend Service ---
+  client:
+    build: ./client
+    container_name: skillswap-client
+    ports:
+      - "3000:80" # Requirement: Map container ports to host ports
+    depends_on:
+      - server
+    networks:
+      - mern_net # Requirement: Configure container networking
+
+# Requirement: Configure container networking explicitly
+networks:
+  mern_net:
+    driver: bridge

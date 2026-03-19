@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+spec:
+  replicas: 1 # We only need 1 database replica for this assignment
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: skillswap-mongo
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        
+        # Requirement: Mount the volume inside the database container
+        volumeMounts: 
+        - name: mongo-storage-data
+          mountPath: /data/db # This is MongoDB's default internal data folder!
+
+      # Connect the volume name to our PVC we created earlier
+      volumes:
+      - name: mongo-storage-data
+        persistentVolumeClaim:
+          claimName: mongo-pvc

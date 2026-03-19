@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 3 # Requirement: Use at least 3 replicas
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: skillswap-server
+        image: skillswap-server:latest # Requirement: Configure container image
+        imagePullPolicy: Never 
+        ports:
+        - containerPort: 5000 # Requirement: Configure container ports
+        
+        resources: 
+          requests:
+            cpu: "100m" # This means 100 milliCPUs (0.1 CPU cores)
+
+        env: # Add this environment section!
+        - name: MONGO_URI
+          value: "mongodb://host.docker.internal:27017/skillswap"
+        - name: JWT_SECRET
+          value: "8348251bfdf408cd316e85f37d6f4869e8aa80f7c022cf17f398c22dd42a1d36"
+        - name: GOOGLE_CLIENT_ID
+          value: "981779103612-vqdqgg56tuj2tceheivr9oobf2ni0hjp.apps.googleusercontent.com"

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 3 # Requirement: Use at least 3 replicas
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: skillswap-client
+        image: skillswap-client:latest # Requirement: Configure container image
+        imagePullPolicy: Never # Tells K8s to use your local Docker image
+        ports:
+        - containerPort: 80 # Requirement: Configure container ports (Nginx default)
+        
+        resources: 
+          requests:
+            cpu: "100m" 

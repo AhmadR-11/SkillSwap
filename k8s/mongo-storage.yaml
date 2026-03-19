@@ -1,0 +1,25 @@
+# 1. Provide the physical pool of storage (Persistent Volume)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath: 
+    path: "/mnt/data/mongo" # Tells K8s to use the local machine's hard drive
+
+---
+# 2. Claim a chunk of that storage for our database (Persistent Volume Claim)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
