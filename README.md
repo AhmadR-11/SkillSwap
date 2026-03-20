@@ -19,6 +19,50 @@ The application follows a standard containerized architecture for modern cloud d
 
 ---
 
+## Complete Quick Start Guide (Zero to Kubernetes)
+Follow these sequential steps to run the entire project from scratch up to a fully orchestrated Kubernetes cluster.
+
+### 1. Preparation
+Clone the repository and create the required environment variables for the backend.
+```bash
+git clone <your-repo-link>
+cd SkillSwap
+echo "PORT=5000" > server/.env
+echo "JWT_SECRET=your_super_secret_key" >> server/.env
+```
+
+### 2. Build the Docker Images
+Kubernetes needs the container images built locally before it can deploy the pods.
+```bash
+# Build Backend Image
+cd server
+docker build -t skillswap-server:latest .
+cd ..
+
+# Build Frontend Image
+cd client
+docker build -t skillswap-client:latest .
+cd ..
+```
+
+### 3. Deploy to Kubernetes
+Spin up the database, persistent storage, frontend, backend, and autoscaler all at once.
+```bash
+# Apply all YAML components in the k8s directory securely
+kubectl apply -f k8s/
+```
+
+### 4. Verify & Access
+Ensure all 7 integrated pods are fully initialized and the autoscaler is monitoring them.
+```bash
+# View all running resources
+kubectl get pods
+kubectl get hpa
+```
+*Your application is now fully live and scaling dynamically inside Kubernetes!*
+
+---
+
 ## Docker Build and Run Instructions
 
 ### 1. Build & Run the Backend
